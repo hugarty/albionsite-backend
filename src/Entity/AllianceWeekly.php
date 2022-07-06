@@ -5,10 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\AllianceDailyRepository")
- * @ORM\Table(name="alliance_daily")
+ * @ORM\Entity(repositoryClass="App\Repository\AllianceWeeklyRepository")
+ * @ORM\Table(name="alliance_weekly")
  */
-class AllianceDaily
+class AllianceWeekly
 {
   /**
    * @ORM\Id
@@ -16,7 +16,7 @@ class AllianceDaily
    * @ORM\Column(type="bigint")
    */
   public $id;
-  
+
   /**
    * @ORM\Column(type="date")
    */
@@ -26,14 +26,15 @@ class AllianceDaily
    * @ORM\ManyToOne(targetEntity="Alliance", fetch="LAZY")
    */
   public $alliance;
+  
+  /**
+   * @ORM\Column(type="integer")
+   */
+  public $territories;
 
   /**
-   * @ORM\Column(type="integer", name="guildcount")
+   * @ORM\Column(type="integer")
    */
-  public $guildCount;
+  public $castles;
 
-  /**
-   * @ORM\Column(type="bigint", name="membercount")
-   */
-  public $memberCount;
 }

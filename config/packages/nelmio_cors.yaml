@@ -1,0 +1,9 @@
+nelmio_cors:
+  defaults:
+  paths:
+    "^/":
+      origin_regex: true
+      allow_origin: ["^http://localhost:[0-9]+"]
+      allow_headers: ["X-Custom-Auth"]
+      allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
+      max_age: 3600

@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -95,6 +96,8 @@ class HomeController extends AbstractController
     $startDate = $resquest->query->get('startDate');
     $endDate = $resquest->query->get('endDate');
     $ids = explode(',', $resquest->query->get('ids'));
+    $this->validateInputs($startDate, $endDate, $ids);
+
     $results = $this->guildDailyRepository->getFromIds($ids, new DateTime($startDate), new DateTime($endDate));
     $responseArray = $this->transformResultsInResponseChart($this->guildDailyTitles, $results);
     return new JsonResponse($responseArray);
@@ -108,12 +111,29 @@ class HomeController extends AbstractController
     $startDate = $resquest->query->get('startDate');
     $endDate = $resquest->query->get('endDate');
     $ids = explode(',', $resquest->query->get('ids'));
+    $this->validateInputs($startDate, $endDate, $ids);
     
     $resultsDaily = $this->allianceDailyRepository->getFromIds($ids, new DateTime($startDate), new DateTime($endDate));
     $response = $this->transformResultsInResponseChart($this->allianceDailyTitles, $resultsDaily);
     $resultsWeekly = $this->allianceWeeklyRepository->getFromIds($ids, new DateTime($startDate), new DateTime($endDate));
     $response = $this->transformResultsInResponseChart($this->allianceWeeklyTitles, $resultsWeekly, $response);
     return new JsonResponse($response);
+  }
+
+  private function validateInputs($startDate, $endDate, $ids){
+    $datePattern = '/^\d{4}-\d{2}-\d{2}/';
+    if (!preg_match($datePattern, $startDate) || !preg_match($datePattern, $endDate)) {
+      throw new BadRequestHttpException("Client does not sent startDate or endDate. The accepted format is YYYY-mm-dd.");
+    }
+    $idsMissingErrorMessage = "Client does not sent IDs or format is invalid.";
+    if ($ids == null || count($ids) === 0) {
+      throw new BadRequestHttpException($idsMissingErrorMessage);
+    }
+    foreach($ids as $id) {
+      if (!is_numeric($id)){
+        throw new BadRequestHttpException($idsMissingErrorMessage);
+      }
+    }
   }
 
   private function transformResultsInResponseChart ($titles, $items, $response = []) {

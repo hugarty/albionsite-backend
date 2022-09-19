@@ -1,0 +1,13 @@
+The project collects daily data related to Guilds and Alliances from Albion Online API.
+
+[Daily Job](https://github.com/hugarty/albionsite-job) (Java - Spring Batch)
+
+[Backend](https://github.com/hugarty/albionsite-backend) (PHP - Symfony)
+
+[Frontend](https://github.com/hugarty/albionsite-frontend) (JS - ReactJs)
+
+The entire project runs on heroku free Dynos ([so after november it won't work anymore](https://blog.heroku.com/next-chapter))
+
+albionsite-backend
+---
+PHP Backend - Provide endpoints to get data from database
